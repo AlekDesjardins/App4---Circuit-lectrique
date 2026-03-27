@@ -1,13 +1,38 @@
 package electronique;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CircuitParallele extends Circuit{
+public class CircuitParallele extends Circuit {
 
     public CircuitParallele(List<Composant> composants) {
-         setComposants(composants);
+        super(composants);
     }
-    public void setComposants(List<Composant> composants){
-        this.composants = composants;
+
+    public double calculerResistance() {
+
+        double resistance = 0;
+        for (int compteur = 0; compteur < this.composants.size(); compteur++) {
+            Composant MonComposant = this.composants.get(compteur);
+            if (MonComposant.getClass().getSimpleName().equals("CircuitParallele")) {
+                List<Composant> CircuitParallele = new ArrayList<>();
+                CircuitParallele.add(MonComposant);
+                MonComposant = new CircuitParallele(CircuitParallele);
+                double resistanceTemporaire = MonComposant.calculerResistance();
+                resistance += 1 / resistanceTemporaire;
+            } else if (MonComposant.getClass().getSimpleName().equals("CircuitSerie")) {
+                List<Composant> CircuitSerie = new ArrayList<>();
+                CircuitSerie.add(MonComposant);
+                MonComposant = new CircuitSerie(CircuitSerie);
+                double resistanceTemporaire = MonComposant.calculerResistance();
+                resistance += 1 / resistanceTemporaire;
+            } else if (MonComposant.getClass().getSimpleName().equals("Resistance")) {
+                double resistanceTemporaire = MonComposant.calculerResistance();
+                resistance += 1 / resistanceTemporaire;
+            }
+
+        }
+        return resistance;
     }
 }
+

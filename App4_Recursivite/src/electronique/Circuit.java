@@ -3,7 +3,7 @@ package electronique;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Circuit extends Composant{
+public abstract class Circuit extends Composant {
     protected List<Composant> composants;
 
     public Circuit(List<Composant> composants) {
@@ -14,5 +14,5 @@ public abstract class Circuit extends Composant{
         return composants;
     }
 
-    
+
 }
