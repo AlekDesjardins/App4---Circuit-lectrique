@@ -13,11 +13,15 @@ public class CircuitBuilder {
 
     public Composant construireCircuit(String pathIn) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode donnesCircuit = mapper.readTree(new File(pathIn));
-        return lireCircuit(donnesCircuit);
+        JsonNode circuitBase = mapper.readTree(new File(pathIn));
+        JsonNode donneesCircuit = circuitBase.get("circuit");
+        return lireCircuit(donneesCircuit);
     }
 
     private Composant lireCircuit(JsonNode noeud) {
+        if (noeud == null) {
+            throw new IllegalArgumentException("Le circuit est vide");
+        }
         String typeCircuit = noeud.get("type").asText();
 
         if ("resistance".equalsIgnoreCase(typeCircuit)) {
