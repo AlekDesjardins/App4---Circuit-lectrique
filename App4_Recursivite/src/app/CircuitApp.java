@@ -4,7 +4,6 @@ import electronique.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -28,23 +27,23 @@ public class CircuitApp {
         System.out.println("Voici les fichiers disponibles à analyser: \n");
         File dossierJson = new File(pathIn);
         File[] fichiersJson = dossierJson.listFiles((dir, name) -> name.endsWith(".json"));
-        try {
-            if (fichiersJson == null || fichiersJson.length == 0) {
-                throw new IllegalArgumentException("Le fichiers de Json données est nul");
-            }
-            for (int compteur = 0; compteur < fichiersJson.length; compteur++) {
-                System.out.println("Choix " + (compteur + 1) + ": " + fichiersJson[compteur].getName());
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+
+        if (fichiersJson == null || fichiersJson.length == 0) {
+            throw new IllegalArgumentException("Le fichiers de Json données est nul");
         }
+        for (int compteur = 0; compteur < fichiersJson.length; compteur++) {
+            System.out.println("Choix " + (compteur + 1) + ": " + fichiersJson[compteur].getName());
+        }
+
         System.out.println("\nVotre choix: ");
         String entree = lecteur.nextLine();
+
+
         File fichierChoisi;
-        try{
-        int numeroFichier = Integer.parseInt(entree) - 1;
+        try {
+            int numeroFichier = Integer.parseInt(entree) - 1;
             fichierChoisi = fichiersJson[numeroFichier];
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException e ) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException e) {
             throw new IllegalArgumentException("Vous devez choisir un des fichiers disponibles");
         }
         return fichierChoisi;
