@@ -10,18 +10,16 @@ import java.util.Scanner;
 
 public class CircuitApp {
     private static final char fSep = File.separatorChar;
-    private static final String pathIn = System.getProperty("user.dir") + fSep + "App4_Recursivite" + fSep + "APP4_gr2" + fSep + "donnees" + fSep + "fichiers_json";
-    private static final String pathOut = System.getProperty("user.dir") + fSep + "APP4_gr2" + fSep + "donnees" + fSep + "out.json";
+    private static final String pathIn = System.getProperty("user.dir") + fSep + "App4_Recursivite" + fSep + "src" + fSep + "donnees" + fSep + "fichiers_json";
 
     public CircuitApp() throws IOException {
-        try { //PAS JUST NUMBERFORMATEXECPETION. AUSSI SI JE MET 4. Bref, gérer les exceptions.
+        try {
             File monFichier = trouverFichierChoisi();
             trouverResistance(monFichier);
-        } catch (NumberFormatException e) {
-            System.out.println("ERREUR - Vous devez choisir un des fichiers parmi les choix\n");
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERREUR - " + e.getMessage() + "\n");
             new CircuitApp();
         }
-
         lireAutreFichier();
     }
 
@@ -42,22 +40,27 @@ public class CircuitApp {
         }
         System.out.println("\nVotre choix: ");
         String entree = lecteur.nextLine();
-        System.out.println("\nVeuillez patientez...\n");
+        File fichierChoisi;
+        try{
         int numeroFichier = Integer.parseInt(entree) - 1;
-        File fichierChoisi = fichiersJson[numeroFichier];
+            fichierChoisi = fichiersJson[numeroFichier];
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException e ) {
+            throw new IllegalArgumentException("Vous devez choisir un des fichiers disponibles");
+        }
         return fichierChoisi;
     }
 
     public void trouverResistance(File fichierChoisi) throws IOException {
         CircuitBuilder builder = new CircuitBuilder();
         Composant circuit = builder.construireCircuit(pathIn + fSep + fichierChoisi.getName());
+        System.out.println("\nVeuillez patientez...\n");
         double resistance = circuit.calculerResistance();
         System.out.println("La résistance de ce circuit est " + (Math.round(resistance * 100.0) / 100.0) + " " + 'Ω');
     }
 
     public void lireAutreFichier() throws IOException {
         Scanner lecteur1 = new Scanner(System.in);
-        System.out.println("\nVoulez-vous lire un autre fichier?\n Oui [O]\t Non[N]");
+        System.out.println("\nVoulez-vous lire un autre fichier?\n Oui [O]\t Non [N]");
         String entree1 = lecteur1.nextLine();
         if (!(entree1.equalsIgnoreCase("n") || entree1.equalsIgnoreCase("o"))) {
             System.out.println("Cette réponse est invalide.");
@@ -65,11 +68,15 @@ public class CircuitApp {
         } else if (entree1.equalsIgnoreCase("O")) {
             new CircuitApp();
         }
+        System.out.println("\nMerci d'avoir utilisé le code de Alek Desjardins!");
+        System.exit(0);
+
     }
 
 
     public static void main(String[] args) throws IOException {
         new CircuitApp();
+
     }
 
 }
